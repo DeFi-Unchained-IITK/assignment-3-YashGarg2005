@@ -1,75 +1,56 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.6.12 <0.9.0;
+pragma solidity ^0.8.0;
 
 contract SimpleBank {
-    struct Fund {
-        uint ID;
-        string name;
-        address place;
-    }
-
-    address private owner;
-    uint private nextID = 0;
-
-    mapping(uint => Fund) private funds; 
-    mapping(address => uint) private balances; 
-
-    constructor() {
-        owner = msg.sender;
-    }
-
-    modifier onlyOwner() {
-        require(msg.sender == owner, "Only the owner can perform this action");
-        _;
-    }
-
+    // Mapping to keep track of user balances
+    mapping(address => uint256) private balances;
     
+    // Event to log deposits
+    event Deposit(address indexed user, uint256 amount);
     
-    function deposit() public payable onlyOwner {
+    // Event to log transfers
+    event Transfer(address indexed from, address indexed to, uint256 amount);
+    
+    // Event to log withdrawals
+    event Withdrawal(address indexed user, uint256 amount);
+    
+    // Function to deposit ether to the bank account
+    function deposit() external payable {
         require(msg.value > 0, "Deposit amount must be greater than zero");
-        balances[owner] += msg.value;
-        
+        balances[msg.sender] += msg.value;
+        emit Deposit(msg.sender, msg.value);
     }
-
-   
-    function withdraw(uint256 amount) public onlyOwner {
-        require(amount > 0, "Withdrawal amount must be greater than zero");
-        require(balances[owner] >= amount, "Insufficient balance");
-
-        balances[owner] -= amount;
-        payable(owner).transfer(amount);
-
-        
-    }
-
     
-    function transfer(address to, uint256 amount) public onlyOwner {
+    // Function to transfer ether from one user's bank account to another user's bank account
+    function transfer(address to, uint256 amount) external {
         require(to != address(0), "Invalid address");
         require(amount > 0, "Transfer amount must be greater than zero");
-        require(balances[owner] >= amount, "Insufficient balance");
-
-        balances[owner] -= amount;
+        require(balances[msg.sender] >= amount, "Insufficient balance");
+        
+        balances[msg.sender] -= amount;
         balances[to] += amount;
-
-       
+        
+        emit Transfer(msg.sender, to, amount);
     }
-
-   
-    function getBalance() public view onlyOwner returns (uint256) {
-        return balances[owner];
-    }
-
     
-    function addFund(string memory _name, address _place) public onlyOwner {
-        funds[nextID] = Fund(nextID, _name, _place);
-        nextID++;
+    // Function to withdraw ether from the user's bank account to their blockchain account
+    function withdraw(uint256 amount) external {
+        require(amount > 0, "Withdrawal amount must be greater than zero");
+        require(balances[msg.sender] >= amount, "Insufficient balance");
+        
+        balances[msg.sender] -= amount;
+        payable(msg.sender).transfer(amount);
+        
+        emit Withdrawal(msg.sender, amount);
     }
-
     
-    function getFundDetails(uint ID) public view returns (uint, string memory, address) {
-        require(ID >= 0 && ID < nextID, "Invalid fund ID");
-        Fund storage fund = funds[ID];
-        return (fund.ID, fund.name, fund.place);
+    // Function to check the balance of the user
+    function getBalance() external view returns (uint256) {
+        return balances[msg.sender];
+    }
+    
+    // Function to check the balance of any user (optional, can be removed if not needed)
+    function getBalanceOf(address user) external view returns (uint256) {
+        return balances[user];
     }
 }
-
