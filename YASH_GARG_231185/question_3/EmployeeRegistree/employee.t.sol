@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.13;
-import { Test } from "lib/forge-std/src/Test.sol";
-import { EmployeeRegistree } from "../src/employee.sol";
+import { Test } from "YASH_GARG_231185/question_3/EmployeeRegistree/forge-std/src/Test.sol";
+import { EmployeeRegistree } from "YASH_GARG_231185/question_3/EmployeeRegistree/employee.sol";
 contract EmployeeRegistreeTest is Test {
     EmployeeRegistree public employee;
     function setUp() public{

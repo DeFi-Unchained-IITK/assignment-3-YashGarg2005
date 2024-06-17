@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import { Test } from "lib/forge-std/src/Test.sol";
-import { Question1 } from "../src/prime.sol";
+import { Test } from "YASH_GARG_231185/question_3/Prime/forge-std/src/Test.sol";
+import { Question1 } from "YASH_GARG_231185/question_3/Prime/prime.sol";
 
 contract TestQuestion1 is Test {
     Question1 prime;
