@@ -4,4 +4,4 @@ change the relative paths as required
 
 use commands forge compile and forge test to run the test
 
-I have creted 4 tests for the library contract
+I have created 4 tests for the library contract
